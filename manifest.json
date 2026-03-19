@@ -1,0 +1,72 @@
+{
+  "name": "AtClass - Learn Mathematics",
+  "short_name": "AtClass",
+  "description": "An interactive mobile web app for learning mathematics",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#6366f1",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/screenshots/screenshot1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/assets/screenshots/screenshot1-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "categories": ["education"],
+  "shortcuts": [
+    {
+      "name": "Topics",
+      "short_name": "Topics",
+      "description": "Browse math topics",
+      "url": "/?page=topics",
+      "icons": [
+        {
+          "src": "/assets/icons/topics.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Progress",
+      "short_name": "Progress",
+      "description": "Check your learning progress",
+      "url": "/?page=progress",
+      "icons": [
+        {
+          "src": "/assets/icons/progress.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

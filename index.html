@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn mathematics interactively with AtClass">
+    <meta name="theme-color" content="#6366f1">
+    <title>AtClass - Learn Math</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">AtClass</h1>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <ul class="nav-list">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#topics" class="nav-link">Topics</a></li>
+            <li><a href="#progress" class="nav-link">Progress</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <h2>Learn Mathematics</h2>
+                    <p>Master math concepts at your own pace</p>
+                    <button class="btn btn-primary" id="startBtn">Start Learning</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topics Section -->
+        <section id="topics" class="section">
+            <div class="container">
+                <h2>Topics</h2>
+                <div class="topics-grid" id="topicsContainer">
+                    <!-- Topics will be populated by JavaScript -->
+                    <div class="topic-card">
+                        <h3>Basic Arithmetic</h3>
+                        <p>Addition, subtraction, multiplication, division</p>
+                        <button class="btn btn-secondary">Learn</button>
+                    </div>
+                    <div class="topic-card">
+                        <h3>Fractions</h3>
+                        <p>Understanding and working with fractions</p>
+                        <button class="btn btn-secondary">Learn</button>
+                    </div>
+                    <div class="topic-card">
+                        <h3>Algebra</h3>
+                        <p>Equations, variables, and expressions</p>
+                        <button class="btn btn-secondary">Learn</button>
+                    </div>
+                    <div class="topic-card">
+                        <h3>Geometry</h3>
+                        <p>Shapes, angles, and spatial reasoning</p>
+                        <button class="btn btn-secondary">Learn</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section id="progress" class="section">
+            <div class="container">
+                <h2>Your Progress</h2>
+                <div class="progress-container">
+                    <div class="progress-card">
+                        <h3>Topics Completed</h3>
+                        <div class="progress-count">0</div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Lessons Done</h3>
+                        <div class="progress-count">0</div>
+                    </div>
+                    <div class="progress-card">
+                        <h3>Score</h3>
+                        <div class="progress-count">0%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2>About AtClass</h2>
+                <p>AtClass is a mobile-friendly learning platform designed to help students master mathematics through interactive lessons and practice problems.</p>
+                <p>Learn at your own pace with our comprehensive curriculum covering arithmetic, fractions, algebra, geometry, and more.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 AtClass. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+{
+  "topics": [
+    {
+      "id": "arithmetic",
+      "name": "Basic Arithmetic",
+      "description": "Addition, subtraction, multiplication, division",
+      "lessons": [
+        {
+          "id": "add-01",
+          "title": "Introduction to Addition",
+          "content": "Addition is combining numbers. The result is called the sum.",
+          "examples": [
+            { "expression": "2 + 3", "result": 5 },
+            { "expression": "5 + 4", "result": 9 }
+          ]
+        },
+        {
+          "id": "sub-01",
+          "title": "Introduction to Subtraction",
+          "content": "Subtraction is taking away numbers. The result is called the difference.",
+          "examples": [
+            { "expression": "5 - 2", "result": 3 },
+            { "expression": "9 - 4", "result": 5 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fractions",
+      "name": "Fractions",
+      "description": "Understanding and working with fractions",
+      "lessons": [
+        {
+          "id": "frac-01",
+          "title": "What is a Fraction?",
+          "content": "A fraction represents a part of a whole. It has a numerator (top) and denominator (bottom).",
+          "examples": [
+            { "fraction": "1/2", "description": "One half" },
+            { "fraction": "3/4", "description": "Three quarters" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "algebra",
+      "name": "Algebra",
+      "description": "Equations, variables, and expressions",
+      "lessons": [
+        {
+          "id": "alg-01",
+          "title": "Variables and Expressions",
+          "content": "Variables are letters that represent unknown numbers. They help us write mathematical expressions.",
+          "examples": [
+            { "expression": "x + 5", "description": "A number plus 5" },
+            { "expression": "2y", "description": "2 times a number" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "geometry",
+      "name": "Geometry",
+      "description": "Shapes, angles, and spatial reasoning",
+      "lessons": [
+        {
+          "id": "geo-01",
+          "title": "Basic Shapes",
+          "content": "Geometry deals with shapes, sizes, and positions of objects.",
+          "examples": [
+            { "shape": "Circle", "sides": 0 },
+            { "shape": "Triangle", "sides": 3 },
+            { "shape": "Square", "sides": 4 }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex-01",
+      "topicId": "arithmetic",
+      "question": "What is 3 + 4?",
+      "type": "multiple-choice",
+      "options": ["5", "6", "7", "8"],
+      "correctAnswer": "7",
+      "difficulty": "easy"
+    },
+    {
+      "id": "ex-02",
+      "topicId": "arithmetic",
+      "question": "What is 12 - 5?",
+      "type": "multiple-choice",
+      "options": ["6", "7", "8", "9"],
+      "correctAnswer": "7",
+      "difficulty": "easy"
+    },
+    {
+      "id": "ex-03",
+      "topicId": "fractions",
+      "question": "What is 1/2 + 1/4?",
+      "type": "multiple-choice",
+      "options": ["1/4", "1/2", "3/4", "1"],
+      "correctAnswer": "3/4",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ex-04",
+      "topicId": "algebra",
+      "question": "If x + 5 = 12, what is x?",
+      "type": "multiple-choice",
+      "options": ["5", "6", "7", "8"],
+      "correctAnswer": "7",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ex-05",
+      "topicId": "geometry",
+      "question": "How many sides does a square have?",
+      "type": "multiple-choice",
+      "options": ["2", "3", "4", "5"],
+      "correctAnswer": "4",
+      "difficulty": "easy"
+    }
+  ]
+}
