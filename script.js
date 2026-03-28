@@ -164,6 +164,7 @@ const lessonsDataEmbedded = {
           "id": "div-01",
           "title": "Introduction to Division",
           "content": "Division is splitting numbers into equal parts. The result is called the quotient. Division is the opposite of multiplication.",
+          "video": "https://www.youtube.com/embed/4ggbHWRhVWw",
           "examples": [
             { "expression": "8 ÷ 2", "result": 4 },
             { "expression": "12 ÷ 3", "result": 4 },
@@ -323,6 +324,15 @@ function displayLesson(topicId, lessonIndex) {
         <h2>${lesson.title}</h2>
         <p>${lesson.content}</p>
     `;
+
+    // Add video if exists
+    if (lesson.video) {
+        lessonHTML += `
+        <div style="margin: 20px 0;">
+            <iframe width="100%" height="315" src="${lesson.video}" title="Lesson Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        `;
+    }
 
     // Add examples
     if (lesson.examples && lesson.examples.length > 0) {
