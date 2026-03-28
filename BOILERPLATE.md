@@ -66,7 +66,7 @@ Then navigate to `http://localhost:8000`
 - **JavaScript**: Navigation logic, progress tracking, button interactions
 - **Service Worker**: Enables offline caching and PWA features
 - **Manifest**: PWA metadata for app installation
-
+hola
 ## Features Explained
 
 ### Mobile Menu Toggle
