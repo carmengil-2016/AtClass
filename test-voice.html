@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Voz - AtClass</title>
+</head>
+<body>
+    <h1>🗣️ Prueba de Síntesis de Voz</h1>
+
+    <div style="margin: 20px 0;">
+        <button id="testBtn" style="padding: 10px 20px; font-size: 16px; background: #6366f1; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            🎵 Probar Voz
+        </button>
+    </div>
+
+    <div id="info" style="margin: 20px 0; padding: 15px; background: #f0f4f8; border-radius: 5px; font-family: monospace;">
+        Cargando información del sistema...
+    </div>
+
+    <div id="log" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; font-family: monospace; max-height: 300px; overflow-y: auto;">
+        <strong>Log de eventos:</strong><br>
+    </div>
+
+    <script>
+        const infoDiv = document.getElementById('info');
+        const logDiv = document.getElementById('log');
+        const testBtn = document.getElementById('testBtn');
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            console.log(message);
+        }
+
+        // Verificar soporte
+        log('Verificando soporte de Web Speech API...');
+        if ('speechSynthesis' in window) {
+            log('✅ Web Speech API soportado');
+        } else {
+            log('❌ Web Speech API NO soportado');
+            infoDiv.innerHTML = '<span style="color: red;">❌ Tu navegador NO soporta síntesis de voz</span>';
+            testBtn.disabled = true;
+            return;
+        }
+
+        const synth = window.speechSynthesis;
+        let voicesLoaded = false;
+
+        // Función para mostrar información de voces
+        function showVoiceInfo() {
+            const voices = synth.getVoices();
+            let html = '<strong>Información del Sistema:</strong><br>';
+            html += `Voces disponibles: ${voices.length}<br>`;
+
+            if (voices.length > 0) {
+                voicesLoaded = true;
+                const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+                html += `Voces en español: ${spanishVoices.length}<br>`;
+
+                if (spanishVoices.length > 0) {
+                    html += '<br><strong>Voces españolas disponibles:</strong><br>';
+                    spanishVoices.forEach((voice, index) => {
+                        html += `${index + 1}. ${voice.name} (${voice.lang})<br>`;
+                    });
+                } else {
+                    html += '<span style="color: orange;">⚠️ No hay voces en español, se usará voz por defecto</span><br>';
+                }
+
+                html += '<br><strong>Todas las voces:</strong><br>';
+                voices.slice(0, 10).forEach((voice, index) => {
+                    html += `${index + 1}. ${voice.name} (${voice.lang})<br>`;
+                });
+
+                if (voices.length > 10) {
+                    html += `... y ${voices.length - 10} más<br>`;
+                }
+            } else {
+                html += '<span style="color: red;">❌ No se encontraron voces</span><br>';
+            }
+
+            infoDiv.innerHTML = html;
+        }
+
+        // Evento cuando las voces cambian
+        synth.onvoiceschanged = function() {
+            log('Voces cargadas/cambiadas');
+            showVoiceInfo();
+        };
+
+        // Mostrar información inicial
+        showVoiceInfo();
+
+        // Forzar carga de voces
+        log('Intentando forzar carga de voces...');
+        const dummyUtterance = new SpeechSynthesisUtterance('test');
+        synth.speak(dummyUtterance);
+        synth.cancel();
+
+        // Función de prueba
+        testBtn.addEventListener('click', function() {
+            log('Botón de prueba presionado');
+
+            if (!voicesLoaded) {
+                log('⚠️ Las voces aún no se han cargado completamente');
+            }
+
+            // Cancelar cualquier habla anterior
+            synth.cancel();
+
+            // Crear utterance
+            const utterance = new SpeechSynthesisUtterance();
+            utterance.text = 'Hola, soy Matheo. Esta es una prueba de voz para la aplicación AtClass. Si puedes oírme claramente, significa que la síntesis de voz está funcionando correctamente en tu navegador.';
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.2;
+            utterance.volume = 1;
+
+            // Intentar usar voz española
+            const voices = synth.getVoices();
+            const spanishVoice = voices.find(v => v.lang.startsWith('es'));
+            if (spanishVoice) {
+                utterance.voice = spanishVoice;
+                log(`Usando voz española: ${spanishVoice.name}`);
+            } else {
+                log('No se encontró voz española, usando voz por defecto');
+            }
+
+            // Eventos
+            utterance.onstart = () => log('🎵 Inicio de reproducción de voz');
+            utterance.onend = () => log('✅ Reproducción de voz terminada');
+            utterance.onerror = (error) => {
+                log(`❌ Error en síntesis de voz: ${error.error}`);
+                alert(`Error al reproducir voz: ${error.error}`);
+            };
+
+            log('Iniciando reproducción...');
+            synth.speak(utterance);
+        });
+
+        // Verificar voces inmediatamente
+        setTimeout(() => {
+            if (!voicesLoaded) {
+                log('⏳ Esperando carga de voces...');
+                showVoiceInfo();
+            }
+        }, 1000);
+
+        // Verificar después de 3 segundos
+        setTimeout(() => {
+            log('Verificación final de voces:');
+            showVoiceInfo();
+        }, 3000);
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Proyectos\AtClass\test-voice.html

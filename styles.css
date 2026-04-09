@@ -183,6 +183,39 @@ main {
     margin-bottom: var(--spacing-lg);
 }
 
+.welcome-lion {
+    font-size: 5rem;
+    margin-bottom: var(--spacing-lg);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.welcome-message {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.8;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.welcome-question {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
 /* ============================================
    Buttons
    ============================================ */
@@ -223,7 +256,27 @@ main {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
 }
+.audio-btn {
+    padding: 0.5rem 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
 
+.audio-btn:hover {
+    background-color: #4f46e5;
+    transform: scale(1.05);
+}
+
+.audio-btn:active {
+    transform: scale(0.98);
+}
 /* ============================================
    Topics Grid
    ============================================ */
@@ -253,6 +306,69 @@ main {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
+}
+
+.topics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.topics-header h2 {
+    margin: 0;
+    flex: 1;
+    min-width: 250px;
+}
+
+.topics-header .btn-secondary {
+    white-space: nowrap;
+}
+
+/* ============================================
+   Courses Grid
+   ============================================ */
+.courses-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.course-card {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    padding: var(--spacing-lg);
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.course-card h3 {
+    color: white;
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.3rem;
+}
+
+.course-card p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: var(--spacing-md);
+    font-size: 0.95rem;
+}
+
+.course-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.course-card .btn {
+    background-color: white;
+    color: var(--primary-color);
+    font-weight: 700;
 }
 
 .topic-card h3 {
@@ -354,6 +470,10 @@ main {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .courses-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
     .section h2 {
         font-size: 2rem;
     }
@@ -385,3 +505,433 @@ main {
         background-color: #374151;
     }
 }
+
+/* ============================================
+   Lesson Content Styles
+   ============================================ */
+.lesson-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.tiger-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.tiger-greeting {
+    font-size: 5rem;
+    animation: bounce 2s infinite;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.tiger-speech {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+    color: white;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    position: relative;
+    min-width: 250px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.tiger-speech::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 0px solid transparent;
+    border-top: 10px solid #8b5cf6;
+}
+
+.tiger-speech p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.lesson-title-section {
+    flex: 1;
+}
+
+.lesson-title-section h2 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.lesson-explanation {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: var(--spacing-lg);
+    border-radius: 0.5rem;
+    margin-bottom: var(--spacing-lg);
+    border-left: 6px solid var(--primary-color);
+}
+
+.lesson-explanation h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    font-size: 1.3rem;
+}
+
+.matheo-explaining {
+    background-color: white;
+    padding: var(--spacing-lg);
+    border-radius: 0.5rem;
+    border: 2px dashed var(--primary-color);
+}
+
+.matheo-explaining p {
+    color: #1f2937;
+    line-height: 1.8;
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.matheo-play-btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 0.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    align-self: flex-start;
+    margin-top: var(--spacing-md);
+}
+
+.matheo-play-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.matheo-play-btn.speaking {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.lesson-video-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.lesson-video-section h3 {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+}
+
+.video-container {
+    background-color: #f3f4f6;
+    padding: var(--spacing-lg);
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.video-container svg {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+}
+
+.lesson-diagram {
+    background-color: #faf5ff;
+    padding: var(--spacing-lg);
+    border-radius: 0.5rem;
+    margin-bottom: var(--spacing-lg);
+    border: 2px solid #e9d5ff;
+}
+
+.lesson-diagram h3 {
+    color: #7c3aed;
+    margin-top: 0;
+}
+
+.diagram {
+    margin-top: var(--spacing-md);
+}
+
+.diagram h3 {
+    color: #6366f1;
+    font-size: 1.2rem;
+}
+
+/* Content Selection Styles */
+.content-selection {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: var(--spacing-xl);
+    border-radius: 1rem;
+    margin-bottom: var(--spacing-lg);
+    border: 3px solid var(--primary-color);
+}
+
+.selection-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+}
+
+.option-card {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.option-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
+}
+
+.option-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.option-card h3 {
+    color: var(--primary-color);
+    margin: var(--spacing-md) 0;
+    font-size: 1.3rem;
+}
+
+.option-card p {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+    font-size: 0.95rem;
+}
+
+.option-btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.option-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Number visualization styles */
+.number-visual {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-md);
+}
+
+.number-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-md);
+    background-color: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 0.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.number-item span {
+    font-size: 1.2rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.number-item img {
+    width: 40px;
+    height: 40px;
+}
+
+/* Place value styles */
+.place-value, .place-value-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+}
+
+.place-item {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    padding: var(--spacing-lg);
+    border-radius: 0.5rem;
+    border: 2px solid #f59e0b;
+}
+
+.place-item h4 {
+    color: #92400e;
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.tens, .ones, .hundreds {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-sm) 0;
+    background-color: white;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.tens, .hundreds {
+    color: #6366f1;
+}
+
+.ones {
+    color: #ec4899;
+}
+
+.total {
+    padding: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    background-color: #dbeafe;
+    border-radius: 0.375rem;
+    font-weight: 700;
+    color: #1e40af;
+    border: 2px solid #3b82f6;
+}
+
+/* Addition visualization */
+.addition-visual, .subtraction-visual, .division-visual, .multiplication-visual {
+    margin-top: var(--spacing-md);
+}
+
+.sum-row, .sub-row, .div-row, .mult-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: white;
+    border-radius: 0.5rem;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.plus, .minus, .divide {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+}
+
+.equals {
+    color: var(--success-color);
+    font-size: 1.3rem;
+}
+
+.result {
+    background-color: #dbeafe;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 0.375rem;
+    color: #1e40af;
+    font-weight: bold;
+}
+
+.mult-formula, .div-formula {
+    text-align: center;
+    font-size: 1.5rem;
+    padding: var(--spacing-md);
+    background-color: #f0fdf4;
+    border: 2px solid var(--success-color);
+    border-radius: 0.5rem;
+    font-weight: bold;
+    color: var(--success-color);
+}
+
+/* Fractions visualization */
+.fractions-visual {
+    display: flex;
+    gap: var(--spacing-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--spacing-md);
+}
+
+.fraction-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-md);
+    background-color: white;
+    border: 2px solid #8b5cf6;
+    border-radius: 0.5rem;
+}
+
+.fraction-item p {
+    margin-top: var(--spacing-sm);
+    font-weight: bold;
+    color: #7c3aed;
+}
+
+.lesson-navigation-section {
+    margin-top: var(--spacing-xl) !important;
+}
+
+.lesson-navigation-section h3 {
+    color: #0369a1;
+}
+
+/* Voice Status Indicator */
+.voice-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.voice-status.voice-available {
+    color: #059669;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.voice-status.voice-unavailable {
+    color: #dc2626;
+    background: rgba(220, 38, 38, 0.1);
+}
+
+.voice-status.voice-loading {
+    color: #d97706;
+    background: rgba(245, 158, 11, 0.1);
+}
+

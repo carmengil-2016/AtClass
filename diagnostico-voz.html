@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagnóstico de Voz</title>
+</head>
+<body>
+    <h1>🔍 Diagnóstico de Voz</h1>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        let output = '';
+
+        function log(message) {
+            output += message + '<br>';
+            results.innerHTML = output;
+            console.log(message);
+        }
+
+        log('🔍 Iniciando diagnóstico...');
+
+        // Paso 1: Verificar soporte básico
+        log('Paso 1: Verificando Web Speech API...');
+        if (!('speechSynthesis' in window)) {
+            log('❌ ERROR: speechSynthesis no existe en window');
+            return;
+        }
+        log('✅ speechSynthesis existe');
+
+        // Paso 2: Verificar objeto speechSynthesis
+        log('Paso 2: Verificando objeto speechSynthesis...');
+        if (!window.speechSynthesis) {
+            log('❌ ERROR: window.speechSynthesis es null/undefined');
+            return;
+        }
+        log('✅ window.speechSynthesis disponible');
+
+        // Paso 3: Verificar método getVoices
+        log('Paso 3: Verificando método getVoices...');
+        if (typeof window.speechSynthesis.getVoices !== 'function') {
+            log('❌ ERROR: getVoices no es una función');
+            return;
+        }
+        log('✅ getVoices es una función');
+
+        // Paso 4: Verificar método speak
+        log('Paso 4: Verificando método speak...');
+        if (typeof window.speechSynthesis.speak !== 'function') {
+            log('❌ ERROR: speak no es una función');
+            return;
+        }
+        log('✅ speak es una función');
+
+        // Paso 5: Intentar obtener voces
+        log('Paso 5: Intentando obtener voces...');
+        try {
+            const voices = window.speechSynthesis.getVoices();
+            log(`✅ getVoices() ejecutado. Voces encontradas: ${voices.length}`);
+
+            if (voices.length > 0) {
+                log('📋 Lista de voces disponibles:');
+                voices.forEach((voice, index) => {
+                    log(`  ${index + 1}. ${voice.name} (${voice.lang})`);
+                });
+
+                const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+                log(`🇪🇸 Voces en español: ${spanishVoices.length}`);
+            }
+        } catch (error) {
+            log(`❌ ERROR al obtener voces: ${error.message}`);
+        }
+
+        // Paso 6: Probar síntesis básica
+        log('Paso 6: Probando síntesis básica...');
+        try {
+            const utterance = new SpeechSynthesisUtterance('Hola mundo');
+            log('✅ SpeechSynthesisUtterance creado');
+
+            utterance.onstart = () => log('🎵 Voz iniciada');
+            utterance.onend = () => log('✅ Voz terminada');
+            utterance.onerror = (e) => log(`❌ Error en voz: ${e.error}`);
+
+            window.speechSynthesis.speak(utterance);
+            log('✅ speak() llamado');
+        } catch (error) {
+            log(`❌ ERROR al crear utterance: ${error.message}`);
+        }
+
+        // Información del navegador
+        log('📱 Información del navegador:');
+        log(`  User Agent: ${navigator.userAgent}`);
+        log(`  Platform: ${navigator.platform}`);
+        log(`  Language: ${navigator.language}`);
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Proyectos\AtClass\diagnostico-voz.html

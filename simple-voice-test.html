@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Básica de Voz</title>
+</head>
+<body>
+    <h1>🗣️ Prueba Básica de Voz</h1>
+
+    <button id="speakBtn" style="padding: 15px 30px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        🔊 HABLAR
+    </button>
+
+    <div id="status" style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px;">
+        Estado: Esperando...
+    </div>
+
+    <script>
+        const btn = document.getElementById('speakBtn');
+        const status = document.getElementById('status');
+
+        function updateStatus(message, color = 'black') {
+            status.innerHTML = message;
+            status.style.color = color;
+            console.log(message);
+        }
+
+        // Verificar soporte básico
+        updateStatus('Verificando soporte de Web Speech API...');
+
+        if (!('speechSynthesis' in window)) {
+            updateStatus('❌ ERROR: Tu navegador NO soporta Web Speech API', 'red');
+            btn.disabled = true;
+            return;
+        }
+
+        updateStatus('✅ Web Speech API soportado', 'green');
+
+        // Intentar obtener voces inmediatamente
+        let voices = speechSynthesis.getVoices();
+        updateStatus(`Voces encontradas inmediatamente: ${voices.length}`);
+
+        // Configurar evento de cambio de voces
+        speechSynthesis.onvoiceschanged = function() {
+            voices = speechSynthesis.getVoices();
+            updateStatus(`🔄 Voces cargadas: ${voices.length}`, 'blue');
+
+            if (voices.length > 0) {
+                const spanishVoices = voices.filter(v => v.lang.startsWith('es'));
+                updateStatus(`🇪🇸 Voces en español: ${spanishVoices.length}`, 'green');
+
+                if (spanishVoices.length > 0) {
+                    updateStatus(`✅ ¡Voces españolas disponibles! (${spanishVoices.map(v => v.name).join(', ')})`, 'green');
+                }
+            }
+        };
+
+        // Función de hablar
+        btn.addEventListener('click', function() {
+            updateStatus('🎵 Iniciando reproducción...', 'orange');
+
+            // Crear utterance simple
+            const utterance = new SpeechSynthesisUtterance();
+            utterance.text = 'Hola, soy Matheo. Esta es una prueba básica de voz. Si puedes oírme, significa que la síntesis de voz funciona en tu navegador.';
+            utterance.lang = 'es-ES'; // Forzar español
+            utterance.rate = 1; // Velocidad normal
+            utterance.pitch = 1; // Tono normal
+            utterance.volume = 1; // Volumen máximo
+
+            // Eventos
+            utterance.onstart = () => updateStatus('🔊 Reproduciendo voz...', 'green');
+            utterance.onend = () => updateStatus('✅ Reproducción terminada', 'green');
+            utterance.onerror = (e) => {
+                updateStatus(`❌ Error: ${e.error}`, 'red');
+                console.error('Speech error:', e);
+            };
+
+            // Intentar usar voz española si está disponible
+            voices = speechSynthesis.getVoices();
+            const spanishVoice = voices.find(v => v.lang.startsWith('es'));
+            if (spanishVoice) {
+                utterance.voice = spanishVoice;
+                updateStatus(`🎯 Usando voz española: ${spanishVoice.name}`, 'blue');
+            }
+
+            // Reproducir
+            try {
+                speechSynthesis.speak(utterance);
+            } catch (error) {
+                updateStatus(`❌ Error al iniciar voz: ${error.message}`, 'red');
+                console.error('Speak error:', error);
+            }
+        });
+
+        // Verificar voces después de un tiempo
+        setTimeout(() => {
+            voices = speechSynthesis.getVoices();
+            updateStatus(`⏱️ Verificación final: ${voices.length} voces disponibles`);
+
+            if (voices.length === 0) {
+                updateStatus('⚠️ ADVERTENCIA: No se encontraron voces. Puede que necesites reiniciar el navegador o instalar voces adicionales.', 'orange');
+            }
+        }, 3000);
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Proyectos\AtClass\simple-voice-test.html

@@ -1,20 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Learn mathematics interactively with AtClass">
+    <meta name="description" content="Aprende matemáticas interactivamente con AtClass">
     <meta name="theme-color" content="#6366f1">
-    <title>AtClass - Learn Math</title>
+    <title>AtClass - Aprende Matemáticas</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+    
+    <!-- Schema.org markup for educational videos -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "AtClass",
+        "description": "Aplicación web móvil para aprender matemáticas de forma interactiva",
+        "url": "https://atclass.example.com",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "AtClass Team"
+        },
+        "hasPart": [
+            {
+                "@type": "VideoObject",
+                "name": "Aprender a contar números",
+                "description": "Lección interactiva sobre números del 0 al 10 con animaciones",
+                "thumbnailUrl": "https://img.youtube.com/vi/4ggbHWRhVWw/maxresdefault.jpg",
+                "uploadDate": "2024-01-01",
+                "duration": "PT5M",
+                "embedUrl": "https://www.youtube.com/embed/4ggbHWRhVWw",
+                "interactionStatistic": {
+                    "@type": "InteractionCounter",
+                    "interactionType": "https://schema.org/WatchAction",
+                    "userInteractionCount": 1000
+                }
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="container">
             <h1 class="logo">AtClass</h1>
-            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <div id="voiceStatus" class="voice-status" style="display: none;">
+                <span id="voiceIcon">🔊</span>
+                <span id="voiceText">Voz disponible</span>
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -25,10 +67,10 @@
     <!-- Navigation -->
     <nav class="nav" id="nav">
         <ul class="nav-list">
-            <li><a href="#home" class="nav-link active">Home</a></li>
-            <li><a href="#topics" class="nav-link">Topics</a></li>
-            <li><a href="#progress" class="nav-link">Progress</a></li>
-            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#home" class="nav-link active">Inicio</a></li>
+            <li><a href="#topics" class="nav-link">Temas</a></li>
+            <li><a href="#progress" class="nav-link">Progreso</a></li>
+            <li><a href="#about" class="nav-link">Acerca de</a></li>
         </ul>
     </nav>
 
@@ -38,9 +80,55 @@
         <section id="home" class="section active">
             <div class="container">
                 <div class="hero">
-                    <h2>Learn Mathematics</h2>
-                    <p>Master math concepts at your own pace</p>
-                    <button class="btn btn-primary" id="startBtn">Start Learning</button>
+                    <div class="welcome-lion">🐯</div>
+                    <h2>¡Bienvenido a AtClass!</h2>
+                    <p class="welcome-message">¡Hola! Soy Matheo, tu tigre guía. Aquí en AtClass aprenderás matemáticas de forma interactiva y divertida, todo a tu propio ritmo.</p>
+                    <p class="welcome-question">¿Quieres empezar?</p>
+                    <button class="btn btn-primary" id="startBtn">Empezar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Selection Section -->
+        <section id="course-selection" class="section">
+            <div class="container">
+                <div class="hero">
+                    <div class="welcome-lion">🐯</div>
+                    <h2>¿Qué quieres trabajar?</h2>
+                    <p class="welcome-message">Hola de nuevo, soy Matheo. Elige el nivel que mejor se adapte a ti y comienza a aprender.</p>
+                    
+                    <div class="courses-grid">
+                        <div class="course-card">
+                            <h3>1º de Primaria</h3>
+                            <p>Números del 0-99, sumas y restas básicas</p>
+                            <button class="btn btn-secondary" data-grade="1">Seleccionar</button>
+                        </div>
+                        <div class="course-card">
+                            <h3>2º de Primaria</h3>
+                            <p>Números del 0-999, multiplicación básica</p>
+                            <button class="btn btn-secondary" data-grade="2">Seleccionar</button>
+                        </div>
+                        <div class="course-card">
+                            <h3>3º de Primaria</h3>
+                            <p>Multiplicación, división, fracciones simples</p>
+                            <button class="btn btn-secondary" data-grade="3">Seleccionar</button>
+                        </div>
+                        <div class="course-card">
+                            <h3>4º de Primaria</h3>
+                            <p>Fracciones, decimales, operaciones múltiples</p>
+                            <button class="btn btn-secondary" data-grade="4">Seleccionar</button>
+                        </div>
+                        <div class="course-card">
+                            <h3>5º de Primaria</h3>
+                            <p>Decimales avanzados, porcentajes, álgebra básica</p>
+                            <button class="btn btn-secondary" data-grade="5">Seleccionar</button>
+                        </div>
+                        <div class="course-card">
+                            <h3>6º de Primaria</h3>
+                            <p>Geometría, estadística, problemas complejos</p>
+                            <button class="btn btn-secondary" data-grade="6">Seleccionar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -48,29 +136,12 @@
         <!-- Topics Section -->
         <section id="topics" class="section">
             <div class="container">
-                <h2>Topics</h2>
+                <div class="topics-header">
+                    <h2 id="topicsTitle">Temas de Aprendizaje</h2>
+                    <button class="btn btn-secondary" style="margin-bottom: 20px;">← Cambiar Curso</button>
+                </div>
                 <div class="topics-grid" id="topicsContainer">
                     <!-- Topics will be populated by JavaScript -->
-                    <div class="topic-card">
-                        <h3>Basic Arithmetic</h3>
-                        <p>Addition, subtraction, multiplication, division</p>
-                        <button class="btn btn-secondary">Learn</button>
-                    </div>
-                    <div class="topic-card">
-                        <h3>Fractions</h3>
-                        <p>Understanding and working with fractions</p>
-                        <button class="btn btn-secondary">Learn</button>
-                    </div>
-                    <div class="topic-card">
-                        <h3>Algebra</h3>
-                        <p>Equations, variables, and expressions</p>
-                        <button class="btn btn-secondary">Learn</button>
-                    </div>
-                    <div class="topic-card">
-                        <h3>Geometry</h3>
-                        <p>Shapes, angles, and spatial reasoning</p>
-                        <button class="btn btn-secondary">Learn</button>
-                    </div>
                 </div>
             </div>
         </section>
@@ -78,13 +149,13 @@
         <!-- Lessons Section -->
         <section id="lessons" class="section">
             <div class="container">
-                <button class="btn btn-secondary" id="backBtn" style="margin-bottom: 20px;">← Back</button>
+                <button class="btn btn-secondary" id="backBtn" style="margin-bottom: 20px;">← Atrás</button>
                 <div id="lessonContent">
                     <!-- Lesson content will be populated by JavaScript -->
                 </div>
                 <div class="lesson-navigation" style="display: flex; gap: 10px; justify-content: space-between; margin-top: 30px;">
-                    <button class="btn btn-secondary" id="prevBtn" style="flex: 1;">← Previous Lesson</button>
-                    <button class="btn btn-primary" id="nextBtn" style="flex: 1;">Next Lesson →</button>
+                    <button class="btn btn-secondary" id="prevBtn" style="flex: 1;">← Lección Anterior</button>
+                    <button class="btn btn-primary" id="nextBtn" style="flex: 1;">Siguiente Lección →</button>
                 </div>
             </div>
         </section>
@@ -92,18 +163,18 @@
         <!-- Progress Section -->
         <section id="progress" class="section">
             <div class="container">
-                <h2>Your Progress</h2>
+                <h2>Tu Progreso</h2>
                 <div class="progress-container">
                     <div class="progress-card">
-                        <h3>Topics Completed</h3>
+                        <h3>Temas Completados</h3>
                         <div class="progress-count">0</div>
                     </div>
                     <div class="progress-card">
-                        <h3>Lessons Done</h3>
+                        <h3>Lecciones Completadas</h3>
                         <div class="progress-count">0</div>
                     </div>
                     <div class="progress-card">
-                        <h3>Score</h3>
+                        <h3>Puntuación</h3>
                         <div class="progress-count">0%</div>
                     </div>
                 </div>
@@ -113,9 +184,9 @@
         <!-- About Section -->
         <section id="about" class="section">
             <div class="container">
-                <h2>About AtClass</h2>
-                <p>AtClass is a mobile-friendly learning platform designed to help students master mathematics through interactive lessons and practice problems.</p>
-                <p>Learn at your own pace with our comprehensive curriculum covering arithmetic, fractions, algebra, geometry, and more.</p>
+                <h2>Acerca de AtClass</h2>
+                <p>AtClass es una plataforma de aprendizaje adaptable a dispositivos móviles diseñada para ayudar a los estudiantes a dominar las matemáticas a través de lecciones interactivas y problemas de práctica.</p>
+                <p>Aprende a tu propio ritmo con nuestro currículo completo que cubre aritmética, fracciones, álgebra, geometría y más.</p>
             </div>
         </section>
     </main>
@@ -123,7 +194,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 AtClass. All rights reserved.</p>
+            <p>&copy; 2026 AtClass. Todos los derechos reservados.</p>
         </div>
     </footer>
 
