@@ -6,11 +6,17 @@
     <title>Prueba de Voz - AtClass</title>
 </head>
 <body>
-    <h1>🗣️ Prueba de Síntesis de Voz</h1>
+    <h1>🐯 Prueba de Síntesis de Voz con Rugidos de Tigre</h1>
 
     <div style="margin: 20px 0;">
-        <button id="testBtn" style="padding: 10px 20px; font-size: 16px; background: #6366f1; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        <button id="roarBtn" style="padding: 10px 20px; font-size: 16px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+            🐯 Rugido de Tigre
+        </button>
+        <button id="testBtn" style="padding: 10px 20px; font-size: 16px; background: #6366f1; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
             🎵 Probar Voz
+        </button>
+        <button id="fullTestBtn" style="padding: 10px 20px; font-size: 16px; background: #9C27B0; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            🐯+🎵 Prueba Completa con Rugido
         </button>
     </div>
 
@@ -26,11 +32,118 @@
         const infoDiv = document.getElementById('info');
         const logDiv = document.getElementById('log');
         const testBtn = document.getElementById('testBtn');
+        const roarBtn = document.getElementById('roarBtn');
+        const fullTestBtn = document.getElementById('fullTestBtn');
+        let audioContext = null;
 
         function log(message) {
             const timestamp = new Date().toLocaleTimeString();
             logDiv.innerHTML += `[${timestamp}] ${message}<br>`;
             console.log(message);
+        }
+
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            return audioContext;
+        }
+
+        function playTigerRoar(intensity = 1) {
+            return new Promise((resolve) => {
+                try {
+                    const ctx = initAudioContext();
+                    const duration = 0.8 + Math.random() * 0.4;
+                    const now = ctx.currentTime;
+                    
+                    const oscillator1 = ctx.createOscillator();
+                    const oscillator2 = ctx.createOscillator();
+                    const oscillator3 = ctx.createOscillator();
+                    const mainGain = ctx.createGain();
+                    const filter = ctx.createBiquadFilter();
+                    const filter2 = ctx.createBiquadFilter();
+                    
+                    oscillator1.type = 'sawtooth';
+                    oscillator1.frequency.setValueAtTime(80 + Math.random() * 20, now);
+                    oscillator1.frequency.exponentialRampToValueAtTime(150, now + 0.1);
+                    oscillator1.frequency.exponentialRampToValueAtTime(60, now + duration);
+                    
+                    oscillator2.type = 'square';
+                    oscillator2.frequency.setValueAtTime(120 + Math.random() * 30, now);
+                    oscillator2.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+                    oscillator2.frequency.exponentialRampToValueAtTime(80, now + duration);
+                    
+                    oscillator3.type = 'sawtooth';
+                    oscillator3.frequency.setValueAtTime(40 + Math.random() * 10, now);
+                    oscillator3.frequency.exponentialRampToValueAtTime(100, now + 0.15);
+                    oscillator3.frequency.exponentialRampToValueAtTime(30, now + duration);
+                    
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(400, now);
+                    filter.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+                    filter.frequency.exponentialRampToValueAtTime(200, now + duration);
+                    filter.Q.value = 5;
+                    
+                    filter2.type = 'bandpass';
+                    filter2.frequency.setValueAtTime(150, now);
+                    filter2.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+                    filter2.frequency.exponentialRampToValueAtTime(100, now + duration);
+                    filter2.Q.value = 2;
+                    
+                    const oscGain1 = ctx.createGain();
+                    const oscGain2 = ctx.createGain();
+                    const oscGain3 = ctx.createGain();
+                    oscGain1.gain.setValueAtTime(0.3 * intensity, now);
+                    oscGain1.gain.exponentialRampToValueAtTime(0.5 * intensity, now + 0.1);
+                    oscGain1.gain.exponentialRampToValueAtTime(0.1 * intensity, now + duration * 0.7);
+                    oscGain1.gain.exponentialRampToValueAtTime(0, now + duration);
+                    
+                    oscGain2.gain.setValueAtTime(0.2 * intensity, now);
+                    oscGain2.gain.exponentialRampToValueAtTime(0.4 * intensity, now + 0.08);
+                    oscGain2.gain.exponentialRampToValueAtTime(0.1 * intensity, now + duration * 0.6);
+                    oscGain2.gain.exponentialRampToValueAtTime(0, now + duration);
+                    
+                    oscGain3.gain.setValueAtTime(0.4 * intensity, now);
+                    oscGain3.gain.exponentialRampToValueAtTime(0.6 * intensity, now + 0.15);
+                    oscGain3.gain.exponentialRampToValueAtTime(0.2 * intensity, now + duration * 0.5);
+                    oscGain3.gain.exponentialRampToValueAtTime(0, now + duration);
+                    
+                    mainGain.gain.setValueAtTime(0, now);
+                    mainGain.gain.linearRampToValueAtTime(0.4 * intensity, now + 0.05);
+                    mainGain.gain.linearRampToValueAtTime(0.5 * intensity, now + 0.15);
+                    mainGain.gain.exponentialRampToValueAtTime(0.3 * intensity, now + duration * 0.5);
+                    mainGain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+                    
+                    oscillator1.connect(oscGain1);
+                    oscillator2.connect(oscGain2);
+                    oscillator3.connect(oscGain3);
+                    
+                    oscGain1.connect(filter);
+                    oscGain2.connect(filter);
+                    oscGain3.connect(filter);
+                    
+                    filter.connect(filter2);
+                    filter2.connect(mainGain);
+                    
+                    mainGain.connect(ctx.destination);
+                    
+                    oscillator1.start(now);
+                    oscillator2.start(now);
+                    oscillator3.start(now);
+                    
+                    oscillator1.stop(now + duration);
+                    oscillator2.stop(now + duration);
+                    oscillator3.stop(now + duration);
+                    
+                    setTimeout(resolve, (duration * 1000) + 100);
+                } catch (e) {
+                    console.error('Error playing tiger roar:', e);
+                    resolve();
+                }
+            });
         }
 
         // Verificar soporte
@@ -41,6 +154,8 @@
             log('❌ Web Speech API NO soportado');
             infoDiv.innerHTML = '<span style="color: red;">❌ Tu navegador NO soporta síntesis de voz</span>';
             testBtn.disabled = true;
+            roarBtn.disabled = true;
+            fullTestBtn.disabled = true;
             return;
         }
 
@@ -97,6 +212,14 @@
         synth.speak(dummyUtterance);
         synth.cancel();
 
+        // Función de rugido
+        roarBtn.addEventListener('click', function() {
+            log('🐯 Reproduciendo rugido de tigre...');
+            playTigerRoar(0.6).then(() => {
+                log('✅ Rugido terminado');
+            });
+        });
+
         // Función de prueba
         testBtn.addEventListener('click', function() {
             log('Botón de prueba presionado');
@@ -110,18 +233,25 @@
 
             // Crear utterance
             const utterance = new SpeechSynthesisUtterance();
-            utterance.text = 'Hola, soy Matheo. Esta es una prueba de voz para la aplicación AtClass. Si puedes oírme claramente, significa que la síntesis de voz está funcionando correctamente en tu navegador.';
+            utterance.text = 'Hola, soy Matheo el tigre. Esta es una prueba de voz para la aplicación AtClass. Si puedes oírme claramente, significa que la síntesis de voz está funcionando correctamente en tu navegador.';
             utterance.lang = 'es-ES';
             utterance.rate = 0.9;
-            utterance.pitch = 1.2;
-            utterance.volume = 1;
+            utterance.pitch = 1.0;
+            utterance.volume = 0.85;
 
             // Intentar usar voz española
             const voices = synth.getVoices();
-            const spanishVoice = voices.find(v => v.lang.startsWith('es'));
+            const softVoiceKeywords = ['samantha', 'karen', 'monica', 'paulina', 'carmen', 'lucia', 
+                'sofia', 'google', 'microsoft'];
+            const softVoice = voices.find(v => {
+                const nameLower = v.name.toLowerCase();
+                return softVoiceKeywords.some(keyword => nameLower.includes(keyword)) &&
+                       v.lang.startsWith('es');
+            });
+            const spanishVoice = softVoice || voices.find(v => v.lang.startsWith('es'));
             if (spanishVoice) {
                 utterance.voice = spanishVoice;
-                log(`Usando voz española: ${spanishVoice.name}`);
+                log(`Usando voz: ${spanishVoice.name}`);
             } else {
                 log('No se encontró voz española, usando voz por defecto');
             }
@@ -135,6 +265,57 @@
             };
 
             log('Iniciando reproducción...');
+            synth.speak(utterance);
+        });
+
+        // Función de prueba completa con rugido
+        fullTestBtn.addEventListener('click', async function() {
+            log('🐯+🎵 Iniciando prueba completa con rugido...');
+
+            if (!voicesLoaded) {
+                log('⚠️ Las voces aún no se han cargado completamente');
+            }
+
+            synth.cancel();
+
+            // Primero el rugido
+            await playTigerRoar(0.5);
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            // Luego la voz
+            const utterance = new SpeechSynthesisUtterance();
+            utterance.text = '¡Hola! Soy Matheo el tigre. ¡Bienvenido a AtClass! Vamos a aprender matemáticas juntos de forma divertida.';
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            utterance.volume = 0.85;
+
+            const voices = synth.getVoices();
+            const softVoiceKeywords = ['samantha', 'karen', 'monica', 'paulina', 'carmen', 'lucia', 
+                'sofia', 'google', 'microsoft'];
+            const softVoice = voices.find(v => {
+                const nameLower = v.name.toLowerCase();
+                return softVoiceKeywords.some(keyword => nameLower.includes(keyword)) &&
+                       v.lang.startsWith('es');
+            });
+            const spanishVoice = softVoice || voices.find(v => v.lang.startsWith('es'));
+            if (spanishVoice) {
+                utterance.voice = spanishVoice;
+                log(`Usando voz: ${spanishVoice.name}`);
+            }
+
+            utterance.onstart = () => log('🔊 Reproduciendo voz...');
+            utterance.onend = () => {
+                log('✅ Reproducción terminada');
+                // Rugido al final
+                setTimeout(() => {
+                    playTigerRoar(0.3);
+                }, 500);
+            };
+            utterance.onerror = (error) => {
+                log(`❌ Error en síntesis de voz: ${error.error}`);
+            };
+
             synth.speak(utterance);
         });
 

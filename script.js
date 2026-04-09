@@ -83,7 +83,7 @@ const courseData = {
 };
 
 // ============================================
-// Text-to-Speech (Matheo's Voice)
+// Text-to-Speech (Matheo's Voice) with Tiger Roars
 // ============================================
 let speechSynthesis = window.speechSynthesis;
 let currentUtterance = null;
@@ -91,6 +91,8 @@ let isSpeaking = false;
 let voicesLoaded = false;
 let voiceCheckAttempts = 0;
 const maxVoiceCheckAttempts = 10;
+let audioContext = null;
+let tigerRoarEnabled = true;
 
 // Check if speech synthesis is supported
 if (typeof speechSynthesis !== 'undefined' && speechSynthesis) {
@@ -147,7 +149,152 @@ if (typeof speechSynthesis !== 'undefined' && speechSynthesis) {
     alert('Tu navegador no soporta síntesis de voz. Prueba con Chrome, Edge o Safari.');
 }
 
-// Function to get the best available voice
+// Function to initialize Web Audio API for tiger roars
+function initAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+    return audioContext;
+}
+
+// Generate tiger roar using Web Audio API
+function playTigerRoar(intensity = 1) {
+    return new Promise((resolve) => {
+        if (!tigerRoarEnabled) {
+            resolve();
+            return;
+        }
+        
+        try {
+            const ctx = initAudioContext();
+            const duration = 1.0 + Math.random() * 0.6; // Longer roar
+            const now = ctx.currentTime;
+            
+            const oscillator1 = ctx.createOscillator();
+            const oscillator2 = ctx.createOscillator();
+            const oscillator3 = ctx.createOscillator();
+            const noiseGain = ctx.createGain();
+            const mainGain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+            const filter2 = ctx.createBiquadFilter();
+            const distortion = ctx.createWaveShaper();
+            
+            // Create distortion curve for growl effect
+            const samples = 44100;
+            const curve = new Float32Array(samples);
+            const deg = Math.PI / 180;
+            for (let i = 0; i < samples; i++) {
+                const x = (i * 2) / samples - 1;
+                curve[i] = ((3 + 50 * intensity) * x * 20 * deg) / (Math.PI + 50 * intensity * Math.abs(x));
+            }
+            distortion.curve = curve;
+            distortion.oversample = '4x';
+            
+            oscillator1.type = 'sawtooth';
+            oscillator1.frequency.setValueAtTime(80 + Math.random() * 20, now);
+            oscillator1.frequency.exponentialRampToValueAtTime(150, now + 0.1);
+            oscillator1.frequency.exponentialRampToValueAtTime(60, now + duration);
+            
+            oscillator2.type = 'square';
+            oscillator2.frequency.setValueAtTime(120 + Math.random() * 30, now);
+            oscillator2.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+            oscillator2.frequency.exponentialRampToValueAtTime(80, now + duration);
+            
+            oscillator3.type = 'sawtooth';
+            oscillator3.frequency.setValueAtTime(40 + Math.random() * 10, now);
+            oscillator3.frequency.exponentialRampToValueAtTime(100, now + 0.15);
+            oscillator3.frequency.exponentialRampToValueAtTime(30, now + duration);
+            
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(400, now);
+            filter.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+            filter.frequency.exponentialRampToValueAtTime(200, now + duration);
+            filter.Q.value = 5;
+            
+            filter2.type = 'bandpass';
+            filter2.frequency.setValueAtTime(150, now);
+            filter2.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+            filter2.frequency.exponentialRampToValueAtTime(100, now + duration);
+            filter2.Q.value = 2;
+            
+            const oscGain1 = ctx.createGain();
+            const oscGain2 = ctx.createGain();
+            const oscGain3 = ctx.createGain();
+            oscGain1.gain.setValueAtTime(0.3 * intensity, now);
+            oscGain1.gain.exponentialRampToValueAtTime(0.5 * intensity, now + 0.1);
+            oscGain1.gain.exponentialRampToValueAtTime(0.1 * intensity, now + duration * 0.7);
+            oscGain1.gain.exponentialRampToValueAtTime(0, now + duration);
+            
+            oscGain2.gain.setValueAtTime(0.2 * intensity, now);
+            oscGain2.gain.exponentialRampToValueAtTime(0.4 * intensity, now + 0.08);
+            oscGain2.gain.exponentialRampToValueAtTime(0.1 * intensity, now + duration * 0.6);
+            oscGain2.gain.exponentialRampToValueAtTime(0, now + duration);
+            
+            oscGain3.gain.setValueAtTime(0.4 * intensity, now);
+            oscGain3.gain.exponentialRampToValueAtTime(0.6 * intensity, now + 0.15);
+            oscGain3.gain.exponentialRampToValueAtTime(0.2 * intensity, now + duration * 0.5);
+            oscGain3.gain.exponentialRampToValueAtTime(0, now + duration);
+            
+            mainGain.gain.setValueAtTime(0, now);
+            mainGain.gain.linearRampToValueAtTime(0.4 * intensity, now + 0.05);
+            mainGain.gain.linearRampToValueAtTime(0.5 * intensity, now + 0.15);
+            mainGain.gain.exponentialRampToValueAtTime(0.3 * intensity, now + duration * 0.5);
+            mainGain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+            
+            oscillator1.connect(oscGain1);
+            oscillator2.connect(oscGain2);
+            oscillator3.connect(oscGain3);
+            
+            oscGain1.connect(filter);
+            oscGain2.connect(filter);
+            oscGain3.connect(filter);
+            
+            filter.connect(filter2);
+            filter2.connect(distortion);
+            distortion.connect(mainGain);
+            
+            mainGain.connect(ctx.destination);
+            
+            oscillator1.start(now);
+            oscillator2.start(now);
+            oscillator3.start(now);
+            
+            oscillator1.stop(now + duration);
+            oscillator2.stop(now + duration);
+            oscillator3.stop(now + duration);
+            
+            setTimeout(resolve, (duration * 1000) + 100);
+        } catch (e) {
+            console.error('Error playing tiger roar:', e);
+            resolve();
+        }
+    });
+}
+
+// Play continuous tiger growl in background
+let tigerGrowlInterval = null;
+function startTigerGrowl() {
+    if (!tigerRoarEnabled) return;
+    
+    stopTigerGrowl();
+    tigerGrowlInterval = setInterval(() => {
+        if (isSpeaking) {
+            playTigerRoar(0.15); // Subtle background growl
+        }
+    }, 2000);
+}
+
+function stopTigerGrowl() {
+    if (tigerGrowlInterval) {
+        clearInterval(tigerGrowlInterval);
+        tigerGrowlInterval = null;
+    }
+}
+
+// Function to get the best available voice - improved for softer, more pleasant voices
 function getBestVoice() {
     if (!voicesLoaded || !speechSynthesis) {
         console.log('Voices not loaded or speech synthesis not available');
@@ -157,10 +304,35 @@ function getBestVoice() {
     const voices = speechSynthesis.getVoices();
     console.log(`Checking ${voices.length} available voices`);
 
-    // Priority 1: Spanish voices
+    // Priority 1: Soft, friendly Spanish voices
     const spanishVoices = voices.filter(voice => voice.lang && voice.lang.startsWith('es'));
     if (spanishVoices.length > 0) {
-        // Prefer female voices for Matheo (more natural for educational content)
+        // Look for soft, friendly voices with specific keywords
+        const softVoiceKeywords = ['samantha', 'karen', 'monica', 'paulina', 'carmen', 'lucia', 
+            'sofia', 'carlos', 'diego', 'ricardo', 'paulina', 'maria', 'laura', 'isabel',
+            'female', 'mujer', 'woman', 'español', 'española'];
+        
+        const friendlyVoice = spanishVoices.find(voice => {
+            const nameLower = voice.name.toLowerCase();
+            return softVoiceKeywords.some(keyword => nameLower.includes(keyword)) &&
+                   !nameLower.includes('zira') && !nameLower.includes('david');
+        });
+        
+        if (friendlyVoice) {
+            console.log('Using friendly Spanish voice:', friendlyVoice.name);
+            return friendlyVoice;
+        }
+        
+        // Prefer voices with 'Google' or 'Microsoft' as they tend to be more natural
+        const naturalVoice = spanishVoices.find(voice => 
+            voice.name.includes('Google') || voice.name.includes('Microsoft')
+        );
+        if (naturalVoice) {
+            console.log('Using natural Spanish voice:', naturalVoice.name);
+            return naturalVoice;
+        }
+        
+        // Prefer female voices (generally perceived as softer)
         const femaleSpanishVoice = spanishVoices.find(voice =>
             voice.name.toLowerCase().includes('female') ||
             voice.name.toLowerCase().includes('mujer') ||
@@ -170,25 +342,47 @@ function getBestVoice() {
             console.log('Using female Spanish voice:', femaleSpanishVoice.name);
             return femaleSpanishVoice;
         }
-        // Use first Spanish voice
+        
         console.log('Using Spanish voice:', spanishVoices[0].name);
         return spanishVoices[0];
     }
 
-    // Priority 2: Any voice that can handle Spanish
-    const anyVoice = voices.find(voice => voice.lang && (
-        voice.lang.includes('es') ||
-        voice.lang.startsWith('en') || // English voices often work well
-        voice.lang.startsWith('fr') || // French voices are similar
-        voice.lang.startsWith('it')    // Italian voices are similar
-    ));
+    // Priority 2: Any voice that can handle Spanish with soft characteristics
+    const anyVoice = voices.find(voice => {
+        if (!voice.lang) return false;
+        const canHandleSpanish = voice.lang.includes('es') || 
+                                 voice.lang.startsWith('en') || 
+                                 voice.lang.startsWith('fr') || 
+                                 voice.lang.startsWith('it');
+        if (!canHandleSpanish) return false;
+        
+        // Prefer softer, more natural voices
+        const nameLower = voice.name.toLowerCase();
+        return nameLower.includes('samantha') || 
+               nameLower.includes('karen') ||
+               nameLower.includes('google') ||
+               nameLower.includes('microsoft');
+    });
 
     if (anyVoice) {
         console.log('Using compatible voice:', anyVoice.name, `(${anyVoice.lang})`);
         return anyVoice;
     }
 
-    // Priority 3: Default system voice
+    // Priority 3: Any voice that can handle Spanish
+    const fallbackVoice = voices.find(voice => voice.lang && (
+        voice.lang.includes('es') ||
+        voice.lang.startsWith('en') ||
+        voice.lang.startsWith('fr') ||
+        voice.lang.startsWith('it')
+    ));
+
+    if (fallbackVoice) {
+        console.log('Using compatible voice:', fallbackVoice.name, `(${fallbackVoice.lang})`);
+        return fallbackVoice;
+    }
+
+    // Priority 4: Default system voice
     if (voices.length > 0) {
         console.log('Using default voice:', voices[0].name, `(${voices[0].lang})`);
         return voices[0];
@@ -198,7 +392,7 @@ function getBestVoice() {
     return null;
 }
 
-function speakExplanation(text, topicTitle) {
+async function speakExplanation(text, topicTitle) {
     // Check if speech synthesis is available
     if (!speechSynthesis) {
         alert('Lo siento, tu navegador no soporta síntesis de voz. Prueba con Chrome, Edge o Safari.');
@@ -211,10 +405,17 @@ function speakExplanation(text, topicTitle) {
 
     // Cancel any ongoing speech
     speechSynthesis.cancel();
+    stopTigerGrowl();
+    
+    // Play tiger roar at the start (powerful)
+    await playTigerRoar(0.7);
+    
+    // Add a small delay before speaking
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     // Create utterance
     currentUtterance = new SpeechSynthesisUtterance();
-    currentUtterance.text = `Hola, soy Matheo. Vamos a aprender sobre ${topicTitle}. ${text}`;
+    currentUtterance.text = `Rrrr... Hola, soy Matheo el tigre. Rrrr... Vamos a aprender sobre ${topicTitle}. ${text}`;
 
     // Set the best available voice
     const bestVoice = getBestVoice();
@@ -227,27 +428,32 @@ function speakExplanation(text, topicTitle) {
         console.log('Using language fallback: es-ES');
     }
 
-    // Adjust speech parameters for better quality
-    currentUtterance.rate = 0.85;  // Slightly slower for clarity
-    currentUtterance.pitch = 1.1;  // Slightly higher pitch for friendliness
-    currentUtterance.volume = 0.9; // Slightly lower volume to be less jarring
+    // Adjust speech parameters for tiger-like voice (lower pitch, slower)
+    currentUtterance.rate = 0.75;  // Slower for tiger-like speech
+    currentUtterance.pitch = 0.6;  // Much lower pitch for tiger sound
+    currentUtterance.volume = 0.8;  // Good volume
 
     // Update button state
     currentUtterance.onstart = () => {
-        console.log('Speech started successfully');
+        console.log('Tiger speech started');
         isSpeaking = true;
         updatePlayButton(true);
+        startTigerGrowl();
     };
 
     currentUtterance.onend = () => {
-        console.log('Speech ended successfully');
+        console.log('Tiger speech ended');
         isSpeaking = false;
+        stopTigerGrowl();
         updatePlayButton(false);
+        // Play a powerful tiger roar at the end
+        playTigerRoar(0.6);
     };
 
     currentUtterance.onerror = (error) => {
-        console.error('Speech synthesis error:', error);
+        console.error('Tiger speech error:', error);
         isSpeaking = false;
+        stopTigerGrowl();
         updatePlayButton(false);
 
         // Show user-friendly error message
@@ -1440,7 +1646,7 @@ function showContentSelection(topicId) {
     speakContentSelection(content ? content.title : topicTitle);
 }
 
-function speakContentSelection(topicTitle) {
+async function speakContentSelection(topicTitle) {
     if (!speechSynthesis) {
         console.error('Speech synthesis not supported for content selection');
         return;
@@ -1451,9 +1657,14 @@ function speakContentSelection(topicTitle) {
     }
 
     speechSynthesis.cancel();
+    stopTigerGrowl();
+    
+    // Play tiger roar at the start
+    await playTigerRoar(0.7);
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     currentUtterance = new SpeechSynthesisUtterance();
-    currentUtterance.text = `Hola, soy Matheo. Vamos a aprender sobre ${topicTitle}. ¿Qué quieres ver o hacer? Puedes elegir el vídeo educativo, donde te muestro cómo funciona paso a paso con animaciones. O el esquema visual, que es un diagrama con ejemplos para entender mejor. O la explicación de voz, donde te explico todo mientras ves los ejemplos. Elige la opción que más te guste.`;
+    currentUtterance.text = `Rrrr... Hola, soy Matheo el tigre. Rrrr... Vamos a aprender sobre ${topicTitle}. ¿Qué quieres ver o hacer? Puedes elegir el vídeo educativo, donde te muestro cómo funciona paso a paso con animaciones. O el esquema visual, que es un diagrama con ejemplos para entender mejor. O la explicación de voz, donde te explico todo mientras ves los ejemplos. Elige la opción que más te guste.`;
 
     // Set the best available voice
     const bestVoice = getBestVoice();
@@ -1463,12 +1674,26 @@ function speakContentSelection(topicTitle) {
         currentUtterance.lang = 'es-ES';
     }
 
-    currentUtterance.rate = 0.85;
-    currentUtterance.pitch = 1.1;
-    currentUtterance.volume = 0.9;
+    // Tiger-like voice parameters
+    currentUtterance.rate = 0.75;
+    currentUtterance.pitch = 0.6;
+    currentUtterance.volume = 0.8;
+
+    currentUtterance.onstart = () => {
+        isSpeaking = true;
+        startTigerGrowl();
+    };
+
+    currentUtterance.onend = () => {
+        isSpeaking = false;
+        stopTigerGrowl();
+        playTigerRoar(0.5);
+    };
 
     currentUtterance.onerror = (error) => {
         console.error('Content selection speech error:', error);
+        isSpeaking = false;
+        stopTigerGrowl();
     };
 
     try {
