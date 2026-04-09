@@ -81,6 +81,17 @@
                     oscillator3.frequency.exponentialRampToValueAtTime(100, now + 0.15);
                     oscillator3.frequency.exponentialRampToValueAtTime(30, now + duration);
                     
+                    const distortion = ctx.createWaveShaper();
+                    const samples = 44100;
+                    const curve = new Float32Array(samples);
+                    const deg = Math.PI / 180;
+                    for (let i = 0; i < samples; i++) {
+                        const x = (i * 2) / samples - 1;
+                        curve[i] = ((3 + 50 * intensity) * x * 20 * deg) / (Math.PI + 50 * intensity * Math.abs(x));
+                    }
+                    distortion.curve = curve;
+                    distortion.oversample = '4x';
+                    
                     filter.type = 'lowpass';
                     filter.frequency.setValueAtTime(400, now);
                     filter.frequency.exponentialRampToValueAtTime(800, now + 0.1);
@@ -128,6 +139,8 @@
                     filter.connect(filter2);
                     filter2.connect(mainGain);
                     
+                    filter.connect(distortion);
+                    distortion.connect(mainGain);
                     mainGain.connect(ctx.destination);
                     
                     oscillator1.start(now);
@@ -220,9 +233,14 @@
             });
         });
 
-        // Función de prueba
-        testBtn.addEventListener('click', function() {
-            log('Botón de prueba presionado');
+        // Función de prueba (voz de tigre)
+        testBtn.addEventListener('click', async function() {
+            log('🐯 Reproduciendo rugido inicial...');
+            await playTigerRoar(0.7);
+            
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            log('🎵 Reproduciendo voz de tigre...');
 
             if (!voicesLoaded) {
                 log('⚠️ Las voces aún no se han cargado completamente');
@@ -231,13 +249,13 @@
             // Cancelar cualquier habla anterior
             synth.cancel();
 
-            // Crear utterance
+            // Crear utterance con voz de tigre
             const utterance = new SpeechSynthesisUtterance();
-            utterance.text = 'Hola, soy Matheo el tigre. Esta es una prueba de voz para la aplicación AtClass. Si puedes oírme claramente, significa que la síntesis de voz está funcionando correctamente en tu navegador.';
+            utterance.text = 'Rrrr... Hola, soy Matheo el tigre. Rrrr... Esta es una prueba de voz para la aplicación AtClass. Si puedes oírme claramente, significa que la síntesis de voz está funcionando correctamente. Rrrr...';
             utterance.lang = 'es-ES';
-            utterance.rate = 0.9;
-            utterance.pitch = 1.0;
-            utterance.volume = 0.85;
+            utterance.rate = 0.75;  // Más lento
+            utterance.pitch = 0.6;  // Mucho más grave
+            utterance.volume = 0.8;
 
             // Intentar usar voz española
             const voices = synth.getVoices();
@@ -257,20 +275,21 @@
             }
 
             // Eventos
-            utterance.onstart = () => log('🎵 Inicio de reproducción de voz');
-            utterance.onend = () => log('✅ Reproducción de voz terminada');
+            utterance.onstart = () => log('🔊 Reproduciendo voz de tigre...');
+            utterance.onend = () => {
+                log('✅ Reproducción terminada');
+                setTimeout(() => playTigerRoar(0.6), 300);
+            };
             utterance.onerror = (error) => {
                 log(`❌ Error en síntesis de voz: ${error.error}`);
-                alert(`Error al reproducir voz: ${error.error}`);
             };
 
-            log('Iniciando reproducción...');
             synth.speak(utterance);
         });
 
         // Función de prueba completa con rugido
         fullTestBtn.addEventListener('click', async function() {
-            log('🐯+🎵 Iniciando prueba completa con rugido...');
+            log('🐯+🎵 Iniciando prueba completa con rugido potente...');
 
             if (!voicesLoaded) {
                 log('⚠️ Las voces aún no se han cargado completamente');
@@ -278,17 +297,17 @@
 
             synth.cancel();
 
-            // Primero el rugido
-            await playTigerRoar(0.5);
-            await new Promise(resolve => setTimeout(resolve, 200));
+            // Primero el rugido potente
+            await playTigerRoar(0.9);
+            await new Promise(resolve => setTimeout(resolve, 400));
 
-            // Luego la voz
+            // Luego la voz de tigre
             const utterance = new SpeechSynthesisUtterance();
-            utterance.text = '¡Hola! Soy Matheo el tigre. ¡Bienvenido a AtClass! Vamos a aprender matemáticas juntos de forma divertida.';
+            utterance.text = '¡Rrrr! ¡Hola! Soy Matheo el tigre. ¡Rrrr! ¡Bienvenido a AtClass! Vamos a aprender matemáticas juntos de forma divertida. ¡Rrrr!';
             utterance.lang = 'es-ES';
-            utterance.rate = 0.9;
-            utterance.pitch = 1.0;
-            utterance.volume = 0.85;
+            utterance.rate = 0.7;  // Muy lento
+            utterance.pitch = 0.5;  // Muy grave
+            utterance.volume = 0.75;
 
             const voices = synth.getVoices();
             const softVoiceKeywords = ['samantha', 'karen', 'monica', 'paulina', 'carmen', 'lucia', 
@@ -304,13 +323,10 @@
                 log(`Usando voz: ${spanishVoice.name}`);
             }
 
-            utterance.onstart = () => log('🔊 Reproduciendo voz...');
+            utterance.onstart = () => log('🔊 Reproduciendo voz de tigre...');
             utterance.onend = () => {
                 log('✅ Reproducción terminada');
-                // Rugido al final
-                setTimeout(() => {
-                    playTigerRoar(0.3);
-                }, 500);
+                setTimeout(() => playTigerRoar(0.8), 500);
             };
             utterance.onerror = (error) => {
                 log(`❌ Error en síntesis de voz: ${error.error}`);
